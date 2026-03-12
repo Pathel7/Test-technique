@@ -27,8 +27,11 @@ export default function CreateEvent() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-   try {
-      const created = await createEvent({ title, description, location, date, time }, file || undefined);
+    try {
+      const created = await createEvent(
+        { title, description, location, date, time },
+        file || undefined,
+      );
       console.log("event created", created);
       setSuccess(true);
       setError(false);
@@ -53,7 +56,12 @@ export default function CreateEvent() {
           Les invitations ont été envoyées avec succès.
         </p>
         <p className="text-sm mt-4 animate-pulse">
-          Redirection vers le dashboard...
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="btn btn-primary ml-2"
+          >
+            Aller au dashboard
+          </button>
         </p>
       </motion.div>
     );
@@ -101,7 +109,9 @@ export default function CreateEvent() {
 
             <div className="form-control flex flex-col my-1 md:col-span-2">
               <label className="label">
-                <span className="label-text font-semibold mb-1">Description</span>
+                <span className="label-text font-semibold mb-1">
+                  Description
+                </span>
               </label>
               <textarea
                 placeholder="Décrivez votre événement..."
@@ -158,7 +168,6 @@ export default function CreateEvent() {
             </div>
 
             <div className="form-control flex flex-col md:col-span-2">
-              
               <div className="flex flex-col items-center justify-center border-2 border-dashed border-base-300 rounded-xl p-8 bg-base-200/50 hover:bg-base-200 transition-colors cursor-pointer relative group">
                 <input
                   type="file"
@@ -184,7 +193,9 @@ export default function CreateEvent() {
             </div>
 
             {error && (
-              <div className="alert alert-error md:col-span-2">Echec de la création de l'événement</div>
+              <div className="alert alert-error md:col-span-2">
+                Echec de la création de l'événement
+              </div>
             )}
 
             <div className="flex justify-end gap-4 mt-6 md:col-span-2">
