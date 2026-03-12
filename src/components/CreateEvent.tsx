@@ -72,7 +72,7 @@ export default function CreateEvent() {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="max-w-3xl mx-auto"
+      className="max-w-3xl mx-auto p-6"
     >
       <div className="flex items-center gap-4 mb-8">
         <button
