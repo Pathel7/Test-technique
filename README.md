@@ -38,3 +38,8 @@ Login: http://localhost:8000/login
 
 Register: http://localhost:8000/register
 
+
+NEW UI
+
+
+
