@@ -1,5 +1,4 @@
 import { Calendar, Clock, MapPin, Plus, LogOut } from "lucide-react";
-import { motion } from "motion/react";
 import { useEventStore } from "../stores/eventStore";
 import { useAuthStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
@@ -10,98 +9,103 @@ export default function Dashboard() {
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-  };
-
   useEffect(() => {
-    if(!events.length){
+    if (!events.length) {
       fetchEvents();
     }
-  },[events])
+  }, [events, fetchEvents]);
+
+  const primaryButton =
+    "inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-500 px-5 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-slate-900 shadow-[0_20px_45px_rgba(16,185,129,0.45)] transition hover:brightness-110";
+  const secondaryButton =
+    "inline-flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-4 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-white transition hover:bg-white/20";
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="max-w-7xl mx-auto px-6 py-10 space-y-10"
-    >
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black tracking-tight">Mes Événements</h1>
-          <p className="text-base-content/60 mt-2">
-            Gérez vos invitations et suivez vos événements.
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            onClick={() => navigate("/create-event")}
-            className="btn btn-primary gap-2 shadow-md"
-          >
-            <Plus size={18} />
-            Créer un événement
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="btn btn-secondary gap-2 shadow-md"
-          >
-            <LogOut size={18} />
-            Déconnexion
-          </button>
-        </div>
-      </div>
-
-      {events.length === 0 ? (
-        <div className="hero bg-gray-100 rounded-3xl p-12 border-2 border-dashed border-base-300">
-          <div className="text-center max-w-md">
-            <div className="bg-base-200 p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-              <Calendar size={42} className="text-base-content/20" />
+    <div className="min-h-screen px-4 py-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
+        <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-br from-indigo-600/60 via-slate-900/70 to-slate-900/70 p-10 text-white shadow-[0_30px_80px_rgba(15,23,42,0.65)]">
+          <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-emerald-400/40 blur-[80px]"></div>
+          <div className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-fuchsia-500/20 blur-[120px]"></div>
+          <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+                Gestion
+              </p>
+              <h1 className="text-4xl font-black tracking-tight text-white">
+                Mes événements
+              </h1>
+              <p className="mt-3 max-w-xl text-sm text-white/70">
+                Maintenez vos invitations sous controlé, analysez les retours et
+                créez des expériences mémorables pour vos invités.
+              </p>
             </div>
-
-            <h2 className="text-2xl font-bold">Aucun événement</h2>
-
-            <p className="py-4 text-base-content/60">
-              Vous n'avez pas encore créé d'événement.
-            </p>
-
-            <button
-              onClick={() => navigate("/create-event")}
-              className="btn btn-primary"
-            >
-              Créer mon premier événement
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate("/create-event")}
+                className={primaryButton}
+              >
+                <Plus className="h-4 w-4" />
+                Créer un événement
+              </button>
+              <button
+                onClick={async () => {
+                  await logout();
+                  navigate("/login");
+                }}
+                className={secondaryButton}
+              >
+                <LogOut className="h-4 w-4" />
+                Déconnexion
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {events.map((event) => (
-            <motion.div
-              key={event.id}
-              whileHover={{ y: -6 }}
-              className="card bg-gray-100 border border-base-300 shadow-lg hover:shadow-xl transition"
-            >
-              <div className="card-body space-y-4">
-                <div className="flex items-start justify-between">
-                  <h2 className="card-title text-lg font-bold leading-tight">
+        </section>
+
+        {events.length === 0 ? (
+          <section className="relative group overflow-hidden rounded-[28px] border border-dashed border-white/40 bg-white/5 p-10 text-center text-white shadow-[0_25px_60px_rgba(15,23,42,0.6)]">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-900 to-fuchsia-900 opacity-0 transition duration-700 group-hover:opacity-100"></div>
+            <div className="relative z-10 space-y-4">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10">
+                <Calendar className="h-8 w-8 text-white/70" />
+              </div>
+              <h2 className="text-2xl font-bold">Aucun événement</h2>
+              <p className="text-sm text-white/60">
+                Commencez par créer un moment, nous nous chargeons du reste.
+              </p>
+              <button
+                onClick={() => navigate("/create-event")}
+                className={primaryButton}
+              >
+                <Plus className="h-4 w-4" />
+                Créer mon premier événement
+              </button>
+            </div>
+          </section>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((event) => (
+              <article
+                key={event.id}
+                className="relative flex flex-col gap-5 overflow-hidden rounded-[32px] border border-white/5 bg-gradient-to-br from-slate-900/80 via-slate-900/70 to-purple-900/70 p-6 text-white shadow-[0_25px_60px_rgba(15,23,42,0.65)]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="text-lg font-bold leading-tight tracking-tight">
                     {event.title}
                   </h2>
-
-                  <div className="badge badge-primary badge-sm">ACTIF</div>
+                  <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
+                    ACTIF
+                  </span>
                 </div>
 
-                <p className="text-sm text-base-content/60 line-clamp-2">
+                <p className="text-sm text-white/60 line-clamp-2">
                   {event.description || "Aucune description fournie."}
                 </p>
 
-                <div className="divider my-1"></div>
+                <div className="h-px w-full bg-white/10" />
 
-                <div className="space-y-3 text-sm">
+                <div className="space-y-3 text-sm text-white/70">
                   <div className="flex items-center gap-3">
-                    <Calendar size={16} className="text-primary" />
+                    <Calendar className="h-4 w-4 text-indigo-300" />
                     <span>
                       {new Date(event.date).toLocaleDateString("fr-FR", {
                         day: "numeric",
@@ -110,28 +114,29 @@ export default function Dashboard() {
                       })}
                     </span>
                   </div>
-
                   <div className="flex items-center gap-3">
-                    <Clock size={16} className="text-secondary" />
+                    <Clock className="h-4 w-4 text-cyan-300" />
                     <span>{event.time}</span>
                   </div>
-
                   <div className="flex items-center gap-3">
-                    <MapPin size={16} className="text-accent" />
+                    <MapPin className="h-4 w-4 text-rose-300" />
                     <span className="truncate">{event.location}</span>
                   </div>
                 </div>
 
-                <div className="card-actions justify-end pt-4">
-                  <button className="btn btn-ghost btn-sm">Détails</button>
-
-                  <button className="btn btn-primary btn-sm">Invités</button>
+                <div className="mt-auto flex flex-wrap gap-3 text-xs uppercase tracking-[0.25em]">
+                  <button className="flex-1 rounded-2xl border border-white/20 bg-white/10 px-3 py-2 text-white transition hover:border-white/40 hover:bg-white/20">
+                    Détails
+                  </button>
+                  <button className="flex-1 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-2 font-semibold text-white transition hover:brightness-110">
+                    Invités
+                  </button>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </motion.div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

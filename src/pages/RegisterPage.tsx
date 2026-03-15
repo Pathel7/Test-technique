@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "motion/react";
 import {
   AlertCircle,
   Eye,
@@ -9,9 +8,9 @@ import {
   UserPlus,
   Lock,
 } from "lucide-react";
-import { useAuthStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../stores/authStore";
 
 function RegisterPage() {
   const [name, setName] = useState("");
@@ -20,7 +19,6 @@ function RegisterPage() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
   const [show, setShow] = useState(false);
 
   const { register, loading, error } = useAuthStore();
@@ -33,15 +31,16 @@ function RegisterPage() {
     passwordConfirm.trim() !== "" &&
     password === passwordConfirm;
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-     if (password !== passwordConfirm) {
+    if (password !== passwordConfirm) {
       setPasswordMismatch(true);
       return;
     } else {
       setPasswordMismatch(false);
     }
+
     if (!isFormValid) {
       toast.error("Veuillez remplir tous les champs correctement");
       return;
@@ -56,201 +55,200 @@ function RegisterPage() {
 
       toast.success("Compte créé avec succès !");
       navigate("/login");
-    } catch (error) {
+    } catch (err) {
       toast.error("Erreur lors de la création du compte");
     }
   };
 
+  const inputClass =
+    "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/60 transition focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50";
+  const buttonClass =
+    "flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-[0_20px_40px_rgba(79,70,229,0.45)] transition hover:brightness-110 disabled:brightness-90 disabled:cursor-not-allowed";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="flex justify-center items-center py-12"
-    >
-      <div className="card w-full max-w-md bg-gray-100 shadow-xl border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-2xl font-bold mb-4 flex items-center gap-2">
-            <UserPlus className="text-primary" /> Création de compte
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="mt-4">
+    <div className="min-h-screen px-4 py-10">
+      <div className="relative isolate mx-auto flex w-full max-w-5xl flex-col gap-8 overflow-hidden rounded-[38px] border border-white/10 bg-white/5 p-6 shadow-[0_30px_80px_rgba(15,23,42,0.75)] backdrop-blur-3xl lg:flex-row">
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-500/30 via-purple-500/20 to-sky-500/10"></span>
+        <div className="pointer-events-none absolute -right-24 top-10 h-48 w-48 rounded-full bg-indigo-500/30 blur-[80px]"></div>
+        <div className="pointer-events-none absolute -left-24 bottom-10 h-72 w-72 rounded-full bg-fuchsia-500/20 blur-[120px]"></div>
+
+        <div className="relative z-10 flex flex-1 flex-col gap-5 px-6 py-8 text-white md:px-10">
+          <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+            Rejoignez la communauté
+          </p>
+          <h1 className="text-3xl font-black leading-tight text-white">
+            Créez un compte et lancez vos invitations.
+          </h1>
+          <p className="text-sm text-white/70">
+            Un espace sécurisé pour gérer vos listes, vos invités et vos
+            chronologies d’événements.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <span className="rounded-2xl border border-white/20 bg-white/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80">
+              Confidentialité
+            </span>
+            <span className="rounded-2xl border border-white/20 bg-white/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80">
+              Notifications
+            </span>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex-1 space-y-6 px-6 py-8 text-white md:px-10">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-500 shadow-lg shadow-indigo-500/40">
+              <UserPlus className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-xs uppercase text-white/60">Inscription</p>
+              <h2 className="text-2xl font-semibold text-white">
+                Créez votre compte
+              </h2>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-[#3B5266] [font-feature-settings:'liga'_off,'clig'_off] font-lato text-[0.9375rem] font-normal leading-[1.25rem]"
+                className="text-sm font-semibold text-white/80"
               >
-                Nom
+                Nom complet
               </label>
-              <div className="relative mt-2">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-secondary-light" />
-                </div>
+              <div className="relative">
+                <User className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
                 <input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md bg-[#E1E9F0] focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Nom complet ..."
+                  className={`${inputClass} pl-12`}
                   required
                 />
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-[#3B5266] [font-feature-settings:'liga'_off,'clig'_off] font-lato text-[0.9375rem] font-normal leading-[1.25rem]"
+                className="text-sm font-semibold text-white/80"
               >
                 Email
               </label>
-              <div className="relative mt-2">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-secondary-light" />
-                </div>
+              <div className="relative">
+                <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 rounded-md sm:text-sm"  
                   placeholder="Email ..."
+                  className={`${inputClass} pl-12`}
                   required
                 />
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-[#3B5266] font-lato text-[0.9375rem] leading-[1.25rem]"
+                className="text-sm font-semibold text-white/80"
               >
                 Mot de passe
               </label>
-
-              <div className="flex items-center mt-2 space-x-2">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-secondary-light" />
-                  </div>
-                  <input
-                    id="password"
-                    type={show ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`
-                        block w-full pl-10 pr-3 py-3 border rounded-md sm:text-sm
-                        ${
-                          passwordMismatch
-                            ? "border border-[#F04438] bg-[#FEE4E2]"
-                            : "border-gray-300 bg-[#E1E9F0] focus:ring-blue-500 focus:border-blue-500"
-                        }
-                      `}
-                    placeholder="mot de passe ..."
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary-light"
-                    onClick={() => setShow((v) => !v)}
-                    tabIndex={-1}
-                  >
-                    {show ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-
-                {passwordMismatch && (
-                  <AlertCircle className="text-red-500 w-5 h-5 shrink-0" />
-                )}
+              <div className="relative">
+                <Lock className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
+                <input
+                  id="password"
+                  type={show ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mot de passe ..."
+                  className={`${inputClass} pr-12 pl-12`}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 transition hover:text-white/90"
+                  onClick={() => setShow((prev) => !prev)}
+                  aria-label="Afficher ou masquer le mot de passe"
+                >
+                  {show ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
-
-              {passwordMismatch && (
-                <p className="mt-2 text-sm text-red-600">
-                  Les mots de passe ne correspondent pas
-                </p>
-              )}
             </div>
 
-            <div className="mt-4">
+            <div className="space-y-2">
               <label
                 htmlFor="passwordConfirm"
-                className="text-[#3B5266] font-lato text-[0.9375rem] leading-[1.25rem]"
+                className="text-sm font-semibold text-white/80"
               >
-                confirmer le mot de passe
+                Confirmer le mot de passe
               </label>
-
-              <div className="flex items-center mt-2 space-x-2">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-secondary-light" />
-                  </div>
-                  <input
-                    id="passwordConfirm"
-                    type={showConfirm ? "text" : "password"}
-                    value={passwordConfirm}
-                    onChange={(e) => {
-                      setPasswordConfirm(e.target.value);
-                      if (passwordMismatch && e.target.value === password) {
-                        setPasswordMismatch(false);
-                      }
-                    }}
-                    className={`
-                        block w-full pl-10 pr-3 py-3 border rounded-md sm:text-sm
-                        ${
-                          passwordMismatch
-                            ? "border border-[#F04438] bg-[#FEE4E2]"
-                            : "border-gray-300 bg-[#E1E9F0] focus:ring-blue-500 focus:border-blue-500"
-                        }
-                      `}
-                    placeholder="confirmer le mot de passe ..."
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary-light"
-                    onClick={() => setShowConfirm((v) => !v)}
-                    tabIndex={-1}
-                  >
-                    {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-
-                {passwordMismatch && (
-                  <AlertCircle className="text-red-500 w-5 h-5 shrink-0" />
-                )}
+              <div className="relative">
+                <Lock className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
+                <input
+                  id="passwordConfirm"
+                  type={showConfirm ? "text" : "password"}
+                  value={passwordConfirm}
+                  onChange={(e) => {
+                    setPasswordConfirm(e.target.value);
+                    if (passwordMismatch && e.target.value === password) {
+                      setPasswordMismatch(false);
+                    }
+                  }}
+                  placeholder="Confirmez le mot de passe ..."
+                  className={`${inputClass} pr-12 pl-12`}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 transition hover:text-white/90"
+                  onClick={() => setShowConfirm((prev) => !prev)}
+                  aria-label="Afficher ou masquer la confirmation"
+                >
+                  {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
-
-              {passwordMismatch && (
-                <p className="mt-2 text-sm text-red-600">
-                  Les mots de passe ne correspondent pas
-                </p>
-              )}
             </div>
 
-            {error && (
-              <div className="alert alert-error text-sm py-2">{error}</div>
+            {passwordMismatch && (
+              <div className="flex items-center gap-2 rounded-2xl border border-rose-400/60 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+                <AlertCircle className="h-4 w-4 text-rose-200" />
+                Les mots de passe doivent correspondre.
+              </div>
             )}
 
-            <button
-              className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
-              disabled={loading}
-            >
-              S'inscrire
+            {error && (
+              <p className="rounded-2xl border border-rose-400/60 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className={buttonClass} disabled={loading}>
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Chargement...
+                </span>
+              ) : (
+                "S'inscrire"
+              )}
             </button>
           </form>
-          <div className="divider">OU</div>
-          <p className="text-center text-sm">
-            Déjà un compte ?{" "}
-            <a
+          <p className="text-center text-sm text-white/60">
+            Déjà un compte ?
+            <button
+              type="button"
               onClick={() => navigate("/login")}
-              className="link link-primary font-semibold cursor-pointer"
+              className="ml-1 font-semibold text-white underline decoration-white/40"
             >
               Se connecter
-            </a>
+            </button>
           </p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
