@@ -67,11 +67,6 @@ app/.cache
 app/.eslintcache
 app/.vercel
 
-# Husky related files
-.husky
-package.json
-pnpm-lock.yaml
-
 # Snapshots (generated automatically, not to be versioned)
 .snapshots/
 
